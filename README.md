@@ -1,6 +1,7 @@
 # Rainio Tab
 
 一个美观、功能丰富的浏览器新标签页扩展，为您的浏览器体验增添个性化色彩。
+![预览图](./docs/images/screenshots/screenshots.gif)
 
 ## ✨ 功能特性
 

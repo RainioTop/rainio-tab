@@ -1,0 +1,29 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "typeRoots": [
+        "node_modules/@types"
+      ]
+    },
+    "lib": [
+      "ES2020",
+      "ES2021.WeakRef"
+    ]
+  }
+}

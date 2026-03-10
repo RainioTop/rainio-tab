@@ -1,0 +1,68 @@
+# ===== 补充内容开始 =====
+
+# 1. 环境变量文件（核心！避免敏感信息提交）
+.env
+.env.*
+!.env.example  # 保留示例文件（无敏感信息）
+
+# 2. TypeScript 编译产物
+*.tsbuildinfo
+typings/
+lib/  # 常见的 TS 编译输出目录
+
+# 3. 包管理相关
+package-lock.json  # 如果你用 npm（可选，团队统一即可）
+yarn.lock         # 如果你用 yarn（可选）
+pnpm-lock.yaml    # 如果你用 pnpm（可选）
+.npmrc            # 本地 npm 配置（可能包含镜像/权限）
+.yarnrc           # 本地 yarn 配置
+
+# 4. 缓存/临时文件
+.cache/
+.eslintcache
+.tmp/
+temp/
+
+# 5. 构建工具额外产物
+coverage/         # 测试覆盖率报告（如 jest/istanbul）
+build/            # 部分项目用 build 代替 dist
+out/              # Vite/Next.js 等可能的输出目录
+.next/            # Next.js 缓存/构建产物
+.nuxt/            # Nuxt.js 缓存/构建产物
+.vuepress/dist    # VuePress 文档构建产物
+
+# 6. 操作系统相关
+Thumbs.db        # Windows 缩略图缓存
+ehthumbs.db      # Windows 隐藏缩略图缓存
+
+# 7. 测试相关
+*.spec.js.snap   # Jest 快照文件（如果不想提交）
+test-results/    # 测试运行结果
+
+# ===== 补充内容结束 =====
+
+# 你的原有内容
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

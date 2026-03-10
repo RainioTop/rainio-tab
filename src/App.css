@@ -1,0 +1,39 @@
+/* https://github.com/TakWolf/ark-pixel-font */
+@font-face {
+    font-family: 'PixelFont'; /* 自定义字体名 */
+    src: url('./assets/fonts/fusion-pixel-12px-monospaced-zh_hans.ttf.woff2') format('woff2'),
+    url('./assets/fonts/fusion-pixel-12px-monospaced-zh_hans.ttf.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap; /* 优化字体加载体验 */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /* https://www.bizhihui.com/p/22152.html */
+    /*background: url('assets/bg.jpg.bak') center/cover no-repeat fixed;*/
+    font-family: 'PixelFont', "DengXian", "Microsoft YaHei", sans-serif;
+    min-height: 100vh;
+    width: 100%;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* 让页面撑满视口 */
+    overflow: hidden; /* 禁止页面滚动（如果是全屏网页） */
+}
+
+/* App.css */
+.app-container {
+    width: 45%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* 确保垂直居中 */
+    background: transparent; /* 明确设置透明，避免遮挡视频 */
+    z-index: 1; /* 高于视频的 z-index: -1 */
+}

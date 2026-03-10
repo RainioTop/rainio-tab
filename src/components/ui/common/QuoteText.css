@@ -1,0 +1,7 @@
+.quote-text {
+    height: 20px;
+    font-weight: bold;
+    color: white;
+    opacity: 0.9;
+    user-select: none;
+}

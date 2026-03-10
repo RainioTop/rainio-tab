@@ -1,0 +1,78 @@
+/* 关闭按钮基础样式 */
+.icon__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 0, 0);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+
+    /* 初始状态 - 完全隐藏 */
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(30%, -30%) scale(0.5);
+
+    /* 动画设置 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+/* 完全可见状态 */
+.icon__close--visible {
+    opacity: 0.7;
+    visibility: visible;
+    transform: translate(30%, -30%) scale(1);
+}
+
+/* 完全隐藏状态 */
+.icon__close--hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(30%, -30%) scale(0.5);
+}
+
+/* 显示动画状态 */
+.icon__close--showing {
+    opacity: 0.7;
+    visibility: visible;
+    transform: translate(30%, -30%) scale(1);
+}
+
+/* 隐藏动画状态 */
+.icon__close--hiding {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(30%, -30%) scale(0.5);
+}
+
+/* 悬停效果 */
+.icon__close--visible:hover,
+.icon__close--showing:hover {
+    background: rgba(255, 0, 0);
+    opacity: 0.9;
+    transform: translate(30%, -30%) scale(1.2);
+}
+
+.icon__close svg {
+    width: 80%;
+    height: 80%;
+}
+
+.icon {
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+.icon__image {
+    transition: opacity 0.3s ease;
+}

@@ -1,0 +1,27 @@
+/* 抽离设置图标和弹窗样式 */
+.settings-icon {
+    position: absolute;
+    opacity: 0.5;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    filter: invert(1) brightness(2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.settings-icon:hover {
+    opacity: 0.8;
+    transform: rotate(90deg);
+}
+
+.settings-icon:active {
+    transform: rotate(90deg) scale(0.9);
+    opacity: 1;
+    filter: invert(1) brightness(3);
+    transition: transform 0.1s ease;
+}
+
+.settings-popover {
+    margin-right: 20px !important;
+    opacity: 0.9;
+}

@@ -1,0 +1,8 @@
+.time-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    opacity: 0.9;
+    user-select: none;
+}

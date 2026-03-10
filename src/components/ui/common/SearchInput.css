@@ -1,0 +1,45 @@
+.input-group {
+    margin-bottom: 15px;
+    padding: 0 12px 0 22px;
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 0 solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), /* 内发光边框 */ 0 8px 32px rgba(0, 0, 0, 0.15), /* 主阴影 */ 0 2px 8px rgba(0, 0, 0, 0.1), /* 近距离阴影 */ inset 0 1px 0 rgba(255, 255, 255, 0.05); /* 内顶部高光 */
+    transform: translateY(-2px); /* 轻微上浮 */
+    background: rgba(255, 255, 255, 0.02); /* 背景微亮 */
+    transition: background 0.3s ease-in-out;
+}
+
+.input-group:hover,
+.input-group:focus-within {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.input-group-input {
+    font-size: 150%;
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.input-group-input:focus {
+    opacity: 1;
+}
+
+.input-group-button {
+    height: 100%;
+    background: transparent;
+}
+
+.input-group-button:hover {
+    transform: scale(1.2); /* 放大2倍，效果类似height:200% */
+}
+
+.input-group-button-icon {
+    height: 52%;
+    width: auto;
+    opacity: 0.4;
+    transition: transform 0.3s ease-in-out;
+    color: #455465;
+}

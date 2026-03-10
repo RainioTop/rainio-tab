@@ -1,0 +1,64 @@
+/* Dock容器样式 */
+.dock-container {
+    position: fixed;
+    bottom: 0;
+}
+
+/* 编辑模式开关样式 */
+.edit-mode-label {
+    user-select: none;
+    position: fixed;
+    right: 20px;
+    bottom: .5rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+
+    display: flex;
+    gap: 2px;
+    padding: 8px 12px;
+    opacity: 0.2;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(12px);
+    border: 0;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+
+    flex-direction: column;
+    align-items: center;
+}
+
+.edit-mode-label.is-checked,
+.edit-mode-label:hover {
+    opacity: 0.8;
+}
+
+.edit-mode-switch {
+    cursor: pointer;
+    opacity: 0.75;
+}
+
+.add-icon-form-modal {
+    position: fixed;
+    z-index: 9999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 50%;
+    max-width: 600px;
+    opacity: 0;
+    transition: all 0.1s ease;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.add-icon-form-modal--show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.9;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.add-icon-form-modal .AddIconForm {
+    box-sizing: border-box;
+    width: 100%;
+}

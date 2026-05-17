@@ -1,21 +1,22 @@
 import "./App.css";
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 
 import Background from '@/components/ui/common/Background';
-// import SettingsPopover from "@/components/ui/common/SettingsPopover.tsx";
+import SettingsModal from "@/components/ui/common/SettingsModal.tsx";
 import TimeDisplay from "@/components/ui/common/TimeDisplay.tsx";
 import SearchInput from '@/components/ui/common/SearchInput';
 import QuoteText from '@/components/ui/common/QuoteText';
 import AppDock from '@/components/ui/common/AppDock';
+import { settingsRepository } from '@/db';
+import { DEFAULT_UI_APPEARANCE_CONFIG, type UIAppearanceConfigType } from '@/types/UIAppearanceConfig';
 
-/*
-用到的素材网站:
-APP ICON: https://jiejingku.net/icon/
-像素字体: https://github.com/TakWolf/ark-pixel-font
-壁纸: https://www.bizhihui.com/p/22152.html
-动态壁纸: https://motionbgs.com/mario-pixel-room
-像素风图标: https://pixelarticons.com/
-*/
+const SEARCH_URLS: Record<string, string> = {
+    baidu: 'https://www.baidu.com/s?wd=',
+    google: 'https://www.google.com/search?q=',
+    bing: 'https://www.bing.com/search?q=',
+    sogou: 'https://www.sogou.com/web?query=',
+    custom: '',
+};
 
 function App() {
     const [seconds, setSeconds] = useState(0);
@@ -23,15 +24,34 @@ function App() {
     const [hours, setHours] = useState(0);
     const [quoteText, setQuoteText] = useState([""]);
     const [textAlignment, setTextAlignment] = useState<'left' | 'center' | 'right' | 'justify' | 'start' | 'end' | 'inherit'>('right');
+    const [uiConfig, setUiConfig] = useState<UIAppearanceConfigType | null>(null);
 
-    // 获取名言的函数
+    const handleConfigChange = useCallback((config: UIAppearanceConfigType) => {
+        setUiConfig(config);
+    }, []);
+
+    useEffect(() => {
+        settingsRepository.get().then(saved => {
+            if (saved) {
+                setUiConfig(saved);
+            } else {
+                const defaults: UIAppearanceConfigType = {
+                    id: 'ui_appearance_global',
+                    ...DEFAULT_UI_APPEARANCE_CONFIG,
+                    createdAt: Date.now(),
+                };
+                setUiConfig(defaults);
+                settingsRepository.save(DEFAULT_UI_APPEARANCE_CONFIG);
+            }
+        });
+    }, []);
+
     const fetchQuote = async () => {
         try {
             let sentence: string;
             let source: string;
             const rand = Math.random()
             if (rand > 0.9) {
-                // 一言接口
                 const response = await fetch('https://v1.hitokoto.cn/');
                 const data = await response.json();
                 sentence = `『${data.hitokoto}』`;
@@ -61,7 +81,6 @@ function App() {
             setQuoteText([`${sentence} \n${source}`]);
         } catch (error) {
             console.error('获取一言失败:', error);
-            // 失败时使用默认文本
             setQuoteText(["『接口暂时罢工，但你依旧闪闪发光！』 \n—— 快乐发电站"]);
         }
     };
@@ -74,16 +93,11 @@ function App() {
             setHours(now.getHours());
         };
 
-        // 立即更新一次
-        updateTime();
-
-        // 计算到下一秒开始的时间
         const now = new Date();
         const delay = 1000 - now.getMilliseconds();
 
         const timeout = setTimeout(() => {
             updateTime();
-            // 之后每秒执行
             const interval = setInterval(updateTime, 1000);
             return () => clearInterval(interval);
         }, delay);
@@ -91,7 +105,6 @@ function App() {
         return () => clearTimeout(timeout);
     }, []);
 
-    // 组件挂载时获取名言
     useEffect(() => {
         fetchQuote();
     }, []);
@@ -118,28 +131,45 @@ function App() {
     const search_input_fontSize = Math.min(60, useResponsiveFontSize(160, 0.08));
     const text_type_fontSize = useResponsiveFontSize(20, 0.015);
 
+    const component = uiConfig?.component;
+    const wallpaper = uiConfig?.wallpaper;
+    const browser = uiConfig?.browser;
+    const font = uiConfig?.font;
+
+    const showWallpaper = wallpaper?.type === 'url' && wallpaper.url;
+    const wallpaperType = showWallpaper ? 'url' as const : undefined;
+    const wallpaperValue = showWallpaper ? wallpaper.url : undefined;
+    const searchUrl = SEARCH_URLS[browser?.searchEngine ?? 'bing'] || SEARCH_URLS.bing;
+    const newTab = browser?.tabOpenType === 'new';
 
     return (
-        <div className="app-container">
-            {/* TODO 背景: 支持壁纸和视频(10MB以下) */}
-            <Background videoSrc="bg.mp4"/>
+        <div className="app-container" style={{
+            fontFamily: font?.family !== 'system' ? font?.family : undefined,
+            fontSize: font?.size ? `${font.size}px` : undefined,
+        }}>
+            <Background
+                videoSrc="bg.mp4"
+                wallpaperType={wallpaperType}
+                wallpaperValue={wallpaperValue}
+                isFullScreen={wallpaper?.isFullScreen}
+            />
 
-            {/* TODO 设置项完善 */}
-            {/* <SettingsPopover/> */}
+            <SettingsModal onConfigChange={handleConfigChange}/>
 
-            {/* 时间显示 */}
-            <TimeDisplay hours={hours} minutes={minutes} seconds={seconds} clockFontSize={clock_fontSize}
-                         clockSplitFontSize={clock_split_fontSize} clockDivFontSize={clock_div_fontSize}/>
+            {component?.clock !== false && (
+                <TimeDisplay hours={hours} minutes={minutes} seconds={seconds} clockFontSize={clock_fontSize}
+                             clockSplitFontSize={clock_split_fontSize} clockDivFontSize={clock_div_fontSize}/>
+            )}
 
-            {/* 搜索框 */}
-            <SearchInput searchInputFontSize={search_input_fontSize}/>
+            {component?.searchBar !== false && (
+                <SearchInput searchInputFontSize={search_input_fontSize} searchEngine={searchUrl}/>
+            )}
 
-            {/* 每日一句 */}
-            <QuoteText text={quoteText} fontSize={text_type_fontSize} textAlign={textAlignment}/>
+            {component?.yiyan !== false && (
+                <QuoteText text={quoteText} fontSize={text_type_fontSize} textAlign={textAlignment}/>
+            )}
 
-            {/* Dock 栏 */}
-            <AppDock/>
-
+            <AppDock openInNewTab={newTab}/>
         </div>
     );
 }

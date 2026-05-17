@@ -1,0 +1,177 @@
+/* 触发按钮包装层 - 定位用 */
+.settings-icon-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: inline-block;
+}
+
+/* 触发按钮图标 - 旋转动画 */
+.settings-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    opacity: 0.5;
+    cursor: pointer;
+    filter: invert(1) brightness(2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.settings-icon:hover {
+    opacity: 0.8;
+    transform: rotate(90deg);
+}
+
+.settings-icon:active {
+    transform: rotate(90deg) scale(0.9);
+    opacity: 1;
+    filter: invert(1) brightness(3);
+    transition: transform 0.1s ease;
+}
+
+/* Popover 内容区 */
+.settings-popover-content {
+    background: var(--color-card);
+    opacity: 0.9;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0;
+    color: var(--color-card-foreground);
+    max-height: 70vh;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+/* 一级 Tab */
+.settings-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 4px 4px 0;
+}
+
+.settings-tab {
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.settings-tab:hover {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.settings-tab--active {
+    color: var(--color-card-foreground);
+    border-bottom-color: var(--color-card-foreground);
+}
+
+/* 设置内容区 */
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px;
+    max-height: 55vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.settings-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.settings-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+}
+
+.settings-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 28px;
+    max-width: 100%;
+}
+
+.settings-field-label {
+    flex-shrink: 0;
+    width: 64px;
+    font-size: 12px;
+    color: var(--color-muted-foreground, rgba(0, 0, 0, 0.55));
+    user-select: none;
+    margin: 0;
+    line-height: 1;
+}
+
+.settings-field .settings-select,
+.settings-field .settings-input,
+.settings-field .settings-color-input {
+    flex: 1;
+}
+
+/* 下拉框 */
+.settings-select {
+    height: 32px;
+    font-size: 13px;
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
+    border-radius: 6px;
+    padding: 0 10px;
+    background: var(--color-muted, rgba(0, 0, 0, 0.04));
+    color: var(--color-card-foreground, inherit);
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.settings-select:hover {
+    border-color: var(--color-ring, rgba(0, 0, 0, 0.25));
+}
+
+.settings-select:focus {
+    outline: none;
+    border-color: var(--color-ring, rgba(0, 0, 0, 0.4));
+}
+
+.settings-select option {
+    background: var(--color-card, #fff);
+    color: var(--color-card-foreground, #1a1a2e);
+}
+
+/* 输入框 */
+.settings-input,
+.settings-color-input {
+    height: 32px;
+    font-size: 13px;
+    border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
+    border-radius: 6px;
+    background: var(--color-muted, rgba(0, 0, 0, 0.04));
+    color: var(--color-card-foreground, inherit);
+}
+
+.settings-color-input {
+    width: 100%;
+    padding: 3px;
+    cursor: pointer;
+}
+
+/* 导入导出 */
+.settings-import-export {
+    display: flex;
+    gap: 8px;
+}
+
+.settings-hint {
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.3);
+    margin: 4px 0 0;
+}

@@ -1,54 +1,46 @@
 import Dexie, {type Table} from 'dexie';
 import type {DockItemType} from '@/types/DockConfig';
+import type {UIAppearanceConfigType} from '@/types/UIAppearanceConfig';
 
-// ========== 1. 定义 Dexie 数据库类 ==========
 class AppDB extends Dexie {
-    // 定义 Dock 表（主键 id，索引字段用于优化查询）
     dock!: Table<DockItemType, string>;
+    uiAppearance!: Table<UIAppearanceConfigType, string>;
 
     constructor() {
         super('dock-config-db');
 
-        // 数据库版本 & 表结构定义（无任何函数，纯字段声明）
-        this.version(1).stores({
-            dock: 'id, iconName, sort, isEnabled, createdAt' // id 为主键，其余为索引字段
+        this.version(2).stores({
+            dock: 'id, iconName, sort, isEnabled, createdAt',
+            uiAppearance: 'id'
         });
 
-        // 数据库初始化完成回调
         this.on('populate', () => {
             console.log('数据库初始化完成');
         });
     }
 }
 
-// ========== 2. 创建数据库单例 ==========
 export const db = new AppDB();
 
-// ========== 3. 封装 Dock 表操作方法（替代 RxDB 的文档/集合方法） ==========
+// ========== Dock 表操作 ==========
 export const dockRepository = {
-    // 初始化数据库（兼容原有 getDB 方法命名）
     getDB: () => db,
 
-    // 按排序升序获取所有 Dock 项
     findAllSorted: async (): Promise<DockItemType[]> => {
         return db.dock.orderBy('sort').toArray();
     },
 
-    // 根据图标名称模糊搜索
     searchByName: async (keyword: string): Promise<DockItemType[]> => {
         if (!keyword) return dockRepository.findAllSorted();
         return await db.dock
             .filter(item => item.iconName.toLowerCase().includes(keyword.toLowerCase()))
-            // .orderBy('sort')
             .toArray();
     },
 
-    // 按 ID 查询单个项
     findOne: async (id: string): Promise<DockItemType | undefined> => {
         return await db.dock.get(id);
     },
 
-    // 插入新项
     insert: async (item: Omit<DockItemType, 'createdAt' | 'updatedAt'> & {
         createdAt?: number,
         updatedAt?: number
@@ -62,11 +54,9 @@ export const dockRepository = {
         return finalItem;
     },
 
-    // 切换启用/禁用状态
     toggleEnabled: async (id: string): Promise<DockItemType | undefined> => {
         const item = await dockRepository.findOne(id);
         if (!item) return undefined;
-
         const updatedItem = {
             ...item,
             isEnabled: !item.isEnabled,
@@ -76,11 +66,9 @@ export const dockRepository = {
         return updatedItem;
     },
 
-    // 更新排序值
     updateSort: async (id: string, newSort: number): Promise<DockItemType | undefined> => {
         const item = await dockRepository.findOne(id);
         if (!item) return undefined;
-
         const updatedItem = {
             ...item,
             sort: newSort,
@@ -90,12 +78,10 @@ export const dockRepository = {
         return updatedItem;
     },
 
-    // 批量更新排序
     batchUpdateSort: async (sortMap: Record<string, number>): Promise<DockItemType[]> => {
         const ids = Object.keys(sortMap);
         const items = await db.dock.bulkGet(ids);
         const updatedItems: DockItemType[] = [];
-
         for (const item of items) {
             if (item) {
                 const updatedItem = {
@@ -110,17 +96,50 @@ export const dockRepository = {
         return updatedItems;
     },
 
-    // 删除项
     remove: async (id: string): Promise<boolean> => {
         await db.dock.delete(id);
         return true;
     },
 
-    // 统计启用的图标数量
-    // countEnabled: async (): Promise<number> => {
-    //     return await db.dock.where('isEnabled').equals(true).count();
-    // }
+    // 获取所有 dock 数据（用于导出）
+    findAll: async (): Promise<DockItemType[]> => {
+        return db.dock.toArray();
+    },
+
+    // 清空表（用于导入覆盖）
+    clearAll: async (): Promise<void> => {
+        await db.dock.clear();
+    }
 };
 
-// 兼容原有导出方式（无需修改业务层导入）
+// ========== UI Appearance 配置操作 ==========
+const SETTINGS_ID = 'ui_appearance_global';
+
+export const settingsRepository = {
+    get: async (): Promise<UIAppearanceConfigType | undefined> => {
+        return db.uiAppearance.get(SETTINGS_ID);
+    },
+
+    save: async (config: Omit<UIAppearanceConfigType, 'id' | 'createdAt' | 'updatedAt'>): Promise<UIAppearanceConfigType> => {
+        const existing = await settingsRepository.get();
+        const now = Date.now();
+        const fullConfig: UIAppearanceConfigType = {
+            id: SETTINGS_ID,
+            ...config,
+            createdAt: existing?.createdAt || now,
+            updatedAt: now
+        };
+        if (existing) {
+            await db.uiAppearance.put(fullConfig);
+        } else {
+            await db.uiAppearance.add(fullConfig);
+        }
+        return fullConfig;
+    },
+
+    clearAll: async (): Promise<void> => {
+        await db.uiAppearance.clear();
+    }
+};
+
 export const getDB = dockRepository.getDB;

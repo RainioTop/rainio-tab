@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect} from 'react';
+import React, {useState, useMemo, useCallback, useEffect} from 'react';
 import {Switch} from "@/components/ui/shadcn/switch";
 import Dock from '@/components/ui/reactbits/Dock';
 import Icon from '@/components/ui/common/Icon';
@@ -10,7 +10,7 @@ import {dockRepository} from "@/db";
 import CloseIcon from './CloseIcon';
 import {toast} from "sonner";
 
-const AppDock: React.FC = () => {
+const AppDock: React.FC<{ openInNewTab?: boolean }> = ({ openInNewTab = true }) => {
     const [isChecked, setIsChecked] = useState(false);
     // 维护动态Dock数据（支持增删改查、持久化）
     const [dockItems, setDockItems] = useState<DockItemConfig[]>([]);
@@ -36,10 +36,12 @@ const AppDock: React.FC = () => {
     };
 
     // 工具函数：将配置转换为渲染用的Item（仅在配置变更时执行）
-    const convertConfigToItems = (
-        configs: DockItemConfig[],
-        isEditMode: boolean
-    ) => {
+    const convertConfigToItems = useCallback(
+        (
+            configs: DockItemConfig[],
+            isEditMode: boolean,
+            openInNewTab: boolean
+        ) => {
         // 基础Item转换
         const baseItems = configs.map(config => ({
             icon: (
@@ -55,7 +57,10 @@ const AppDock: React.FC = () => {
             ),
             label: config.label,
             onClick: () => {
-                if (config.url) window.location.href = config.url;
+                if (config.url) {
+                    if (openInNewTab) window.open(config.url, '_blank');
+                    else window.location.href = config.url;
+                }
             },
         }));
 
@@ -69,12 +74,14 @@ const AppDock: React.FC = () => {
         }
 
         return baseItems;
-    };
+        },
+        []
+    );
 
     // 缓存渲染用的Items：仅在dockItems或isEditMode变更时重新生成
     const renderItems = useMemo(() => {
-        return convertConfigToItems(dockItems, isChecked);
-    }, [dockItems, isChecked]);
+        return convertConfigToItems(dockItems, isChecked, openInNewTab);
+    }, [dockItems, isChecked, openInNewTab, convertConfigToItems]);
 
     // 初始化：从数据库加载并合并到基础配置
     useEffect(() => {

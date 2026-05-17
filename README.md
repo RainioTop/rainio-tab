@@ -18,9 +18,10 @@
 - **构建工具**：Vite
 - **样式方案**：Tailwind CSS v4
 - **状态管理**：React Hooks
-- **数据库**：RxDB
+- **数据库**：Dexie (IndexedDB)
 - **动画效果**：GSAP, Motion
-- **UI组件**：shadcn/ui, diceui, reactbits
+- **UI组件**：shadcn/ui, Embla Carousel
+- **表单验证**：react-hook-form + Zod
 - **图标库**：Lucide React, React Icons
 
 ## 📦 安装方式

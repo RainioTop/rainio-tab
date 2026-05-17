@@ -33,7 +33,7 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 60vh; /* 确保垂直居中 */
-    background: transparent; /* 明确设置透明，避免遮挡视频 */
-    z-index: 1; /* 高于视频的 z-index: -1 */
+    min-height: 60vh;
+    background: transparent;
+    z-index: 1;
 }
